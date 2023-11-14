@@ -4,6 +4,7 @@ import './App.css';
 //import { Planets } from './Planets';
 import { useState} from "react";
 import React from 'react';
+import { Task } from './Task';
 
 function App() {
   // const isGreen = true;
@@ -47,19 +48,56 @@ function App() {
   };
 
   const addTask = () => {
-    setTodoList([...todoList, newTask]);
-  }
+    // setTodoList([...todoList, newTask]);
+    const task = {
+      //id: todoList.length === 0 ? 1 : todoList[todoList.length - 1].id + 1,
+      id: todoList.length === 0 ? 1 : todoList[todoList.length - 1].id + 1,
+      taskName: newTask,
+      completed: false,
+    };
+    // const task = {
+    //   id: todoList.length === 0 ? 1 : todoList[todoList.length - 1].id + 1,
+    //   taskName: newTask,
+    // };
+    setTodoList([...todoList, task]);
+  };
+
+  const deleteTask = (id) => {
+    setTodoList(todoList.filter((task) => task.id !==id))
+  };
+
+  const completeTask = (id) => {
+    setTodoList(
+      todoList.map((task) => {
+        if (task.id === id) {
+          return {...task, completed: true};
+        } else {
+          return task;
+        }
+      })
+    );
+  };
 
   return (
     <div className="App">
-      <div className="addTask"></div>
+      <div className="addTask">
         <input onChange={handleChange}/>
         <button onClick={addTask}> Add Task </button>
-      <div className="listTask">
+      </div>
+      <div className="list">
         {todoList.map((task) => {
-          return <h1 key={task.toString()}>{task}</h1>        
+          return ( 
+            <Task
+              taskName = {task.taskName}
+              id = {task.id}
+              completed = {task.completed}
+              deleteTask = {deleteTask}
+              completeTask = {completeTask}
+            />
+          );          
           })}
       </div>
+    
       {/* <button onClick = {increase}> Increase</button>
       <button onClick = {decrease}> Decrease</button>
       <button onClick = {setToZero}> Set to Zero</button> */}
@@ -114,8 +152,8 @@ function App() {
         <h1><Planets name={planet.name} gasPlanet={planet.gasPlanet} /></h1>
         )
       })} */}
-       
     </div>
+       
   );
 }
 // const Jobs = (props) => {
